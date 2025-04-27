@@ -8,6 +8,8 @@ const Projects = () => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
+    const [companyName, setCompanyName] = useState("");
+    const [auditorName, setAuditorName] = useState("");
     const [editingIndex, setEditingIndex] = useState(null);
 
     useEffect(() => {
@@ -30,17 +32,27 @@ const Projects = () => {
                 (project) => project.id === editingIndex
             );
             if (indexToUpdate !== -1) {
-                updatedProjects[indexToUpdate] = { ...updatedProjects[indexToUpdate], name, description, date };
+                updatedProjects[indexToUpdate] = {
+                    ...updatedProjects[indexToUpdate],
+                    name,
+                    description,
+                    date,
+                    companyName,
+                    auditorName
+                };
             }
             saveProjects(updatedProjects);
             setEditingIndex(null);
-        } else {
-            const newProject = { 
-                id: Date.now(), 
-                name, 
-                description, 
+        }
+        else {
+            const newProject = {
+                id: Date.now(),
+                name,
+                description,
                 date,
-                seats: [] 
+                companyName,
+                auditorName,
+                seats: []
             };
             saveProjects([...projects, newProject]);
         }
@@ -59,6 +71,8 @@ const Projects = () => {
         setName(projectToEdit.name);
         setDescription(projectToEdit.description);
         setDate(projectToEdit.date);
+        setCompanyName(projectToEdit.companyName || "");
+        setAuditorName(projectToEdit.auditorName || "");
         setEditingIndex(projectId);
     };
 
@@ -107,6 +121,20 @@ const Projects = () => {
                     <input type="text" placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} className="border p-2 rounded-md" />
                     <textarea placeholder="Descripción" value={description} onChange={(e) => setDescription(e.target.value)} className="border p-2 rounded-md" />
                     <input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="border p-2 rounded-md" />
+                    <input
+                        type="text"
+                        placeholder="Nombre de la Empresa"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="border p-2 rounded-md"
+                    />
+                    <input
+                        type="text"
+                        placeholder="Nombre del Revisor Fiscal"
+                        value={auditorName}
+                        onChange={(e) => setAuditorName(e.target.value)}
+                        className="border p-2 rounded-md"
+                    />
                     <button type="submit" className="bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
                         {editingIndex !== null ? "Actualizar Proyecto" : "Agregar Proyecto"}
                     </button>
@@ -120,6 +148,8 @@ const Projects = () => {
                         <tr className="bg-gray-200">
                             <th className="p-2">Nombre</th>
                             <th className="p-2">Descripción</th>
+                            <th className="p-2">Empresa</th>
+                            <th className="p-2">Revisor</th>
                             <th className="p-2">Fecha</th>
                             <th className="p-2">Acciones</th>
                         </tr>
@@ -134,6 +164,8 @@ const Projects = () => {
                                 <tr key={project.id} className="border-t">
                                     <td className="p-2">{project.name}</td>
                                     <td className="p-2">{project.description}</td>
+                                    <td className="p-2">{project.companyName}</td>
+                                    <td className="p-2">{project.auditorName}</td>
                                     <td className="p-2">{project.date}</td>
                                     <td className="p-2 flex justify-center gap-2">
                                         <button onClick={() => handleOpenSeats(project.id)} className="bg-green-500 text-white px-3 py-1 rounded-md hover:bg-yellow-600">Abrir</button>
